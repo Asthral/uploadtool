@@ -34,19 +34,18 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--url', dest='url', default=None, help='Url to exploit')
 args = parser.parse_args()
 
-def vars(html):
-    form = "<form"
-    for form in html:
-        var = re.findall(r"""<form[.*?]name=["|'](.*?)[.*?]</forms>""", html)
-        var += re.findall(r"""<form[.*?]name=[^"|'](.*?)[.*?]</forms>""", html)
-    return var[0]
+def extract_names(html):
+    forms = re.findall(r"<form[\s\S]*?</form>", html, flags=re.IGNORECASE)
+    for form in forms:
+        names = []
+        names += re.findall(r'name=["\']([^"\']+)["\']', form, flags=re.IGNORECASE)
+        names += re.findall(r'name=([^"\'>\s]+)', form, flags=re.IGNORECASE)
+    return names
+
 def upload(url):
-    url = args.url
-    html = requests.get(url)
-    var = vars(html)
+    html = requests.get(url).text
+    var = extract_names(html)
     return html
-
-
 
 if args.url:
     response = upload(args.url)
