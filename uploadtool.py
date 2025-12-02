@@ -33,7 +33,7 @@ _____/\\\\\\\\\\\\_____________________________________/\\\_____________/\\\____
 parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--url', dest='url', default=None, help='Url to exploit')
 parser.add_argument('-c', '--cookie', dest='cookie', default=None, help='Delicious cookie')
-parser.add_argument('-h', '--header', dest='header', default=None, help='Header for the post request')
+parser.add_argument('-H', '--header', dest='header', default=None, help='Header for the post request')
 parser.add_argument('-b', '--body', dest='body', default=None, help='Body if needed')
 args = parser.parse_args()
 
@@ -48,7 +48,7 @@ def extract_names(html):
 def upload(url):
     html = requests.get(url).text
     var = extract_names(html)
-    return html
+    return var
 
 
 
@@ -56,13 +56,16 @@ if args.url:
     print(f"[+] Exploit {args.url}")
     response = upload(args.url)
     if len(response) >= 2:
-        for idx, var in enumerate(response):
+        for idx, var in enum(response):
             print(f"[{idx}] {var}")
-    
-    files = {'upload_file': open('file.txt','rb')}
-    values = {'DB': 'photcat', 'OUT': 'csv', 'SHORT': 'short'}
+    elif len(response) == 0:
+        print("[!] No variable  or form found, specify with (-v | --var)")
 
-    r = requests.post(url, files=files, data=values)
+    #data = "ok.php"
+    #files = {'upload_file': data}
+    #values = {'DB': 'photcat', 'OUT': 'csv', 'SHORT': 'short'}
+#
+    #r = requests.post(url, files=files, data=values)
       
 else:
-    print("[!] You need to specify an url")
+    print("[!] You need to specify an url (-u | --url)")
