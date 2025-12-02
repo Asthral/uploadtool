@@ -62,9 +62,9 @@ if args.url:
         print("[!] No variable  or form found, specify with (-v | --var)")
 
     #data = "ok.php"
-    #files = {'upload_file': data}
+    #files_name = {'upload_file': data}
     #values = {'DB': 'photcat', 'OUT': 'csv', 'SHORT': 'short'}
-#
+    #
     #r = requests.post(url, files=files, data=values)
       
 else:
