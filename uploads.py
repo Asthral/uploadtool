@@ -61,11 +61,43 @@ if args.url:
     elif len(response) == 0:
         print("[!] No variable  or form found, specify with (-v | --var)")
 
-    #data = "ok.php"
-    #files_name = {'upload_file': data}
-    #values = {'DB': 'photcat', 'OUT': 'csv', 'SHORT': 'short'}
-    #
-    #r = requests.post(url, files=files, data=values)
+    import requests
+
+def upload_files(url, files_dict, extra_params=None):
+
+    files = {}
+    
+    for field, info in files_dict.items():
+        content = info["content"]
+        if isinstance(content, str):
+            content = content.encode()
+
+        files[field] = (info["file_name"], content, info["mime"])
+    url = args.url
+    r = requests.post(url, files=files, data=extra_params or {})
+    return r
       
+payloads = {
+    "file1": {
+        "file_name": "sample.txt",
+        "mime": "text/plain",
+        "content": "Ceci est un test."
+    },
+    "file2": {
+        "file_name": "image.fake.jpg",
+        "mime": "image/jpeg",
+        "content": b"\xff\xd8\xff\xe0"  # header JPEG
+    }
+}
+
+resp = upload_files(
+    url="http://test.local/upload",
+    files_dict=payloads,
+    extra_params={"submit": "OK"}
+)
+
+print(resp.status_code)
+print(resp.text[:500])
+
 else:
     print("[!] You need to specify an url (-u | --url)")
